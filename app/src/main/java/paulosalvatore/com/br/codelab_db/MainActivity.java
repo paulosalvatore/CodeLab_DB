@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 		DatabaseManager.initializeInstance(helper);
 		DatabaseManager baseDados = DatabaseManager.getInstance();
 
-
 		/*
 		baseDados.InserirPosicao(new Posicao());
 		List<Posicao> listaPosicoes = baseDados.ObterPosicoesUsuario();

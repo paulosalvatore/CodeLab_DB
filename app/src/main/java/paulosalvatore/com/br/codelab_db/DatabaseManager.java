@@ -28,11 +28,13 @@ public class DatabaseManager {
 		if (instance == null) {
 			throw new IllegalStateException("Conexão com o banco de dados não iniciada, execute initializeInstance(..) primeiro.");
 		}
+
 		return instance;
 	}
 
 	public void openDB() {
 		mOpenCounter++;
+
 		if (mOpenCounter == 1) {
 			// Abrindo uma nova conexão caso não esteja aberta ainda
 			db = mDatabaseHelper.getWritableDatabase();
@@ -41,62 +43,77 @@ public class DatabaseManager {
 
 	public void closeDB() {
 		mOpenCounter--;
+
 		if (mOpenCounter == 0) {
 			// Fechando a conexão caso não haja mais conexões sendo utilizadas
 			db.close();
 		}
 	}
 
-	protected void Close(Cursor cursor) {
+	protected void close(Cursor cursor) {
 		if (cursor != null) {
 			cursor.close();
 		}
 	}
 
-	public List<Posicao> ObterPosicoesUsuario() {
+	public List<Posicao> obterPosicoesUsuario() {
 		List<Posicao> res = new ArrayList<Posicao>();
+
 		openDB();
-		String selectQuery = "SELECT CHAVE_POSICAO, LATITUDE, LONGITUDE, DATA_HORA FROM TBL_POSICAO";
+
+		String selectQuery = "SELECT * FROM posicoes";
 		Cursor c = db.rawQuery(selectQuery, null);
+
 		if (c.moveToFirst()) {
 			do {
-				Posicao posicao = new Posicao();
-				posicao.setId(c.getInt(c.getColumnIndex("CHAVE_POSICAO")));
-				posicao.setLatitude(c.getLong(c.getColumnIndex("LATITUDE")));
-				posicao.setLongitude(c.getLong(c.getColumnIndex("LONGITUDE")));
-				posicao.setDataHora(c.getString(c.getColumnIndex("DATA_HORA")));
+				Posicao posicao =
+						new Posicao(
+								c.getInt(c.getColumnIndex("id")),
+								c.getDouble(c.getColumnIndex("latitude")),
+								c.getDouble(c.getColumnIndex("longitude")),
+								c.getString(c.getColumnIndex("data_hora"))
+						);
+
 				res.add(posicao);
 			} while (c.moveToNext());
 		}
-		Close(c);
+
+		close(c);
 		closeDB();
+
 		return res;
 	}
 
-	public void InserirPosicao(Posicao posicao) {
+	public void inserirPosicao(Posicao posicao) {
 		openDB();
+
 		ContentValues values = new ContentValues();
-		values.put("LATITUDE", posicao.getLatitude());
-		values.put("LONGITUDE", posicao.getLongitude());
-		values.put("DATA_HORA", posicao.getDataHora());
+		values.put("latitude", posicao.getLatitude());
+		values.put("longitude", posicao.getLongitude());
+		values.put("data_hora", posicao.getDataHora());
+
 		// Insere a posição na tabela
-		db.insert("TBL_POSICAO", null, values);
+		db.insert("posicoes", null, values);
+
 		closeDB();
 	}
 
-	public void AtualizarPosicao(Posicao posicao) {
-		String strSQL = "UPDATE TBL_POSICAO SET LATITUDE = " + posicao.getLatitude()
-				+ ", LONGITUDE = " + posicao.getLongitude()
-				+ ", DATA_HORA = '" + posicao.getDataHora()
-				+ "' WHERE CHAVE_POSICAO = " + posicao.getId();
+	public void atualizarPosicao(Posicao posicao) {
+		String strSQL = "UPDATE posicoes SET latitude = " + posicao.getLatitude()
+				+ ", longitude = " + posicao.getLongitude()
+				+ ", data_hora = '" + posicao.getDataHora()
+				+ "' WHERE id = " + posicao.getId();
 		db.execSQL(strSQL);
+
 		closeDB();
 	}
 
-	public void RemoverPosicao(Posicao posicao) {
+	public void removerPosicao(Posicao posicao) {
 		openDB();
-		String strSQL = "DELETE FROM TBL_POSICAO WHERE CHAVE_POSICAO = " + posicao.getId();
+
+		String strSQL = "DELETE FROM posicoes WHERE id = " + posicao.getId();
 		db.execSQL(strSQL);
+
 		closeDB();
 	}
 }

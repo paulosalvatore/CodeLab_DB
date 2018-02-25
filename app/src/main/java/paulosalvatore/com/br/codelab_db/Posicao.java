@@ -3,41 +3,55 @@ package paulosalvatore.com.br.codelab_db;
 /**
  * Created by paulo on 24/02/2018.
  */
-public class Posicao {
-    private int id;
-    private long latitude;
-    private long longitude;
-    private String dataHora;
 
-    public int getId() {
-        return id;
-    }
+class Posicao {
+	private int id;
+	private double latitude;
+	private double longitude;
+	private String dataHora;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public Posicao(int id, double latitude, double longitude, String dataHora) {
+		this.id = id;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.dataHora = dataHora;
+	}
 
-    public long getLatitude() {
-        return latitude;
-    }
+	public Posicao(double latitude, double longitude, String dataHora) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.dataHora = dataHora;
+	}
 
-    public void setLatitude(long latitude) {
-        this.latitude = latitude;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public long getLongitude() {
-        return longitude;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setLongitude(long longitude) {
-        this.longitude = longitude;
-    }
+	public double getLatitude() {
+		return latitude;
+	}
 
-    public String getDataHora() {
-        return dataHora;
-    }
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-    public void setDataHora(String dataHora) {
-        this.dataHora = dataHora;
-    }
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(String dataHora) {
+		this.dataHora = dataHora;
+	}
 }
